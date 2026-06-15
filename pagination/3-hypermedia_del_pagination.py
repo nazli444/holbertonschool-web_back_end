@@ -27,21 +27,16 @@ class Server:
         return self.__dataset
 
     def indexed_dataset(self) -> Dict[int, List]:
-        """Dataset indexed by sorting position"""
+        """Dataset indexed by sorting position, starting at 0"""
         if self.__indexed_dataset is None:
             dataset = self.dataset()
-
             self.__indexed_dataset = {
                 i: dataset[i] for i in range(len(dataset))
             }
 
         return self.__indexed_dataset
 
-    def get_hyper_index(
-        self,
-        index: int = None,
-        page_size: int = 10
-    ) -> Dict:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """Return hypermedia pagination data"""
 
         dataset = self.indexed_dataset()
@@ -49,20 +44,20 @@ class Server:
         if index is None:
             index = 0
 
-        assert index >= 0 and index < len(self.dataset())
+        assert 0 <= index < len(dataset)
 
         data = []
-        current_index = index
+        next_index = index
 
         while len(data) < page_size:
-            if current_index in dataset:
-                data.append(dataset[current_index])
+            if next_index in dataset:
+                data.append(dataset[next_index])
 
-            current_index += 1
+            next_index += 1
 
         return {
             "index": index,
             "data": data,
             "page_size": len(data),
-            "next_index": current_index
+            "next_index": next_index
         }
