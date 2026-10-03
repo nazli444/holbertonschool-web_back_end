@@ -1,5 +1,5 @@
-# my comment
 #!/usr/bin/env python3
+# my comment
 """102-log_stats"""
 
 from pymongo import MongoClient
